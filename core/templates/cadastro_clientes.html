@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container container-fluid">
+<div class="row">
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <div class="page-header">
+            <h1>Cadastrar Cliente</h1>
+        </div>
+        <form class="form-horizontal" method="post">
+            {% csrf_token %}
+            {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ error }}
+            </div>
+            {% endfor %}
+            <fieldset>
+                {% for field in form %}
+                <div class="form-group{% if field.errors %} has-error{% endif %}">
+                  <label for="{{ field.auto_id }}" class="col-md-3 control-label">
+                  {{ field.label }}</label>
+                  <div class="col-md-9">
+                      {% if field.label == 'Telefone 1' or field.label == 'Telefone 2 (opcional)' %}
+                        {% render_field field class="form-control" id="phone" name="phone" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" %}
+                        {% for error in field.errors %}
+                        <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                      {% else %}
+                        {% render_field field class="form-control" %}
+                        {% for error in field.errors %}
+                        <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                      {% endif %}
+                  </div>
+                </div>
+                {% endfor %}
+                <div class="form-group">
+                  <div class="col-md-9 col-md-offset-3 my-3">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                  </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+</div>
+<script>
+function mask(o, f) {
+  setTimeout(function() {
+    var v = mphone(o.value);
+    if (v != o.value) {
+      o.value = v;
+    }
+  }, 1);
+}
+
+function mphone(v) {
+  var r = v.replace(/\D/g, "");
+  r = r.replace(/^0/, "");
+  if (r.length > 10) {
+    r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/, "($1)$2-$3");
+  } else if (r.length > 5) {
+    r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, "($1)$2-$3");
+  } else if (r.length > 2) {
+    r = r.replace(/^(\d\d)(\d{0,5})/, "($1)$2");
+  } else {
+    r = r.replace(/^(\d*)/, "($1");
+  }
+  return r;
+}
+</script>
+{% endblock %}

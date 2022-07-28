@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container container-fluid my-5">
+  <div class="col-12 mx-auto">
+
+    <form method="GET" action="{% url 'consulta_vendidos' %}" style="text-align:center;">
+      <div class="page-header mx-auto">
+        <h1>Vendidos por período</h1>
+      </div>
+      <div class="row" style="justify-content:center;">
+        <div class="col-4">
+          <label class="control-label">De</label>
+          <input class="form-control form-control-lg" type="date" aria-label="De" name="p" value="{{ request.GET.p }}">
+        </div>
+        <div class="col-4">
+          <label class="control-label">Até</label>
+          <input class="form-control form-control-lg" type="date" aria-label="Até" name="u" value="{{ request.GET.u }}">
+        </div>
+      </div>
+      <span class="input-group-btn">
+        <button type="submit" class="btn btn-primary btn-lg my-3">Consultar</button>
+      </span>
+    </form>
+
+    {% if primeiro and ultimo %}
+    <div class='col 12'>
+        <hr />
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Cliente</th>
+            <th scope="col">Emissão</th>
+            <th scope="col">Validade</th>
+            <th scope="col">Valor</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for obj in object_list %}
+          <tr>
+            <td><a href="{% url 'detalhe_cliente' obj.cliente.slug %}">{{ obj.cliente }}</a></td>
+            <td><a href="{% url 'detalhe_cliente' obj.cliente.slug %}">{{ obj.emissao }}</a></td>
+            <td><a href="{% url 'detalhe_cliente' obj.cliente.slug %}">{{ obj.validade }}</a></td>
+            <td><a href="{% url 'detalhe_cliente' obj.cliente.slug %}">{{ obj.valor }}</a></td>
+          </tr>
+        {% endfor %}
+          <tr>
+            <td></td>
+            <td></td>
+            <td><b>Total:</b></td>
+            <td>{{ soma|floatformat:"2g" }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

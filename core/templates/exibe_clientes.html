@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container container-fluid py-3 my-3" style="text-align:start;">
+    <h2 style="text-align:center;">Clientes</h2>
+
+  <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Responsável</th>
+            <th scope="col">Email</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+
+
+      {% for obj in object_list %}
+          <tr>
+            <td><a href="{% url 'detalhe_cliente' obj.slug %}">{{ obj.nome }}</a></td>
+            <td><a href="{% url 'detalhe_cliente' obj.slug %}">{{ obj.responsavel }}</a></td>
+            <td><a href="{% url 'detalhe_cliente' obj.slug %}">{{ obj.email }}</a></td>
+            <td><a href="{% url 'excluir_cliente' obj.slug %}" class="btn btn-danger">EXCLUIR</a></td>
+          </tr>
+      {% endfor %}
+        </tbody>
+      </table>
+</div>
+{% endblock %}

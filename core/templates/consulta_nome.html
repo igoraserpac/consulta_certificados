@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container container-fluid my-5">
+  <div class="col-10 mx-auto">
+    <h2 style="text-align:center;">Consulta Cliente Por Nome</h2>
+    <div class="col-6 mx-auto">
+      <form method="GET" action="{% url 'consulta_nome' %}" style="text-align:center;">
+        <input class="form-control form-control-lg" style="text-align:center; align-self:center;" type="search" placeholder="Nome" aria-label="Pesquisa" name="q" value="{{ request.GET.q }}">
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-primary btn-lg my-3">Consultar</button>
+        </span>
+      </form>
+    </div>
+    {% if query %}
+    <div class='col 12' style="text-align:center;">
+        Resultado para <b>{{ query }}</b>
+        <hr />
+
+
+      <div class='col-md-12' style="text-align:start;">
+          <hr />
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Nome</th>
+              <th scope="col">Responsável</th>
+              <th scope="col">Telefone</th>
+              <th scope="col">Email</th>
+              <th scope="col">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+
+
+        {% for obj in object_list %}
+            <tr>
+              <td><a href="{% url 'detalhe_cliente' obj.slug %}">{{ obj.nome }}</a></td>
+              <td><a href="{% url 'detalhe_cliente' obj.slug %}">{{ obj.responsavel }}</a></td>
+              <td><a href="{% url 'detalhe_cliente' obj.slug %}">{{ obj.telefone1 }}</a></td>
+              <td><a href="{% url 'detalhe_cliente' obj.slug %}">{{ obj.email }}</a></td>
+              <td><a href="{% url 'excluir_cliente' obj.slug %}" class="btn btn-danger">EXCLUIR</a></td>
+            </tr>
+        {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

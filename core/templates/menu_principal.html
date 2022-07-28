@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container container-fluid my-5">
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <div class="page-header mx-auto">
+            <h1>Menu Principal</h1>
+        </div>
+        <a href="{% url 'menu_cadastro' %}" class="d-grid gap-2 col-6 mx-auto my-4">
+            <button type="button" class="btn btn-primary btn-lg">Novo Certificado</button>
+        </a>
+        <a href="{% url 'menu_consultas' %}" class="d-grid gap-2 col-6 mx-auto">
+            <button type="button" class="btn btn-primary btn-lg">Consultas</button>
+        </a>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="container container-fluid">
+    <div class="row">
+        <div class="d-grid gap-2 col-10 mx-auto">
+            <div class="page-header">
+                <h1>Cliente</h1>
+            </div>
+            <form class="form-horizontal" method="post">
+                {% csrf_token %}
+                {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                <fieldset>
+                    {% for field in form %}
+                    <div class="form-group{% if field.errors %} has-error{% endif %}">
+                      <label for="{{ field.auto_id }}" class="col-md-3 control-label">
+                      {{ field.label }}</label>
+                      <div class="col-md-9">
+                        {% render_field field class="form-control" %}
+                        {% for error in field.errors %}
+                        <span class="help-block">{{ error }}</span>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    {% endfor %}
+                    <div class="form-group">
+                        <div class="row">
+                          <div class="col-1 my-3">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                          </div>
+                          <div class="col-1 my-3">
+                            <a href="{% url 'excluir_cliente' cliente.pk %}" class="btn btn-danger">Excluir</a>
+                          </div>
+                          <div class="col-4 my-3">
+                            <a href="{% url 'transferir_certificados' cliente.pk %}" class="btn btn-primary">Transferir Certificados</a>
+                          </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="d-grid gap-2 col-10 mx-auto">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Ticket</th>
+                    <th scope="col">Emissão</th>
+                    <th scope="col">Validade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for c in certificados %}
+                    <tr>
+                        <td><a href="{% url 'detalhe_certificado' c.slug %}">{{ c.ticket }}</a></td>
+                        <td><a href="{% url 'detalhe_certificado' c.slug %}">{{ c.emissao }}</a></td>
+                        <td><a href="{% url 'detalhe_certificado' c.slug %}">{{ c.validade }}</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

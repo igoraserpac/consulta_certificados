@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container container-fluid my-5">
+    <div class="d-grid gap-2 col-8 mx-auto">
+        <div class="page-header mx-auto">
+            <h1>Consultas</h1>
+        </div>
+        <a href="{% url 'consulta_nome' %}" class="d-grid gap-2 col-6 mx-auto">
+            <button type="button" class="btn btn-primary btn-lg">Consulta por nome</button>
+        </a>
+        <a href="{% url 'exibir_clientes_ordem_alfabetica' %}" class="d-grid gap-2 col-6 mx-auto">
+            <button type="button" class="btn btn-primary btn-lg">Exibir todos em ordem alfabética</button>
+        </a>
+        <a href="{% url 'consulta_vencimento' %}" class="d-grid gap-2 col-6 mx-auto">
+            <button type="button" class="btn btn-primary btn-lg">Vencimento por período</button>
+        </a>
+        <a href="{% url 'consulta_vendidos' %}" class="d-grid gap-2 col-6 mx-auto">
+            <button type="button" class="btn btn-primary btn-lg">Vendidos por período</button>
+        </a>
+    </div>
+</div>
+
+{% endblock %}

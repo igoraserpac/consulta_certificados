@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container container-fluid my-5">
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <div class="page-header mx-auto">
+            <h1>Novo Certificado</h1>
+        </div>
+        <a href="{% url 'cadastro_cliente' %}" class="d-grid gap-2 col-6 mx-auto">
+            <button type="button" class="btn btn-primary btn-lg">Cliente Novo</button>
+        </a>
+        <a href="{% url 'cadastro_certificado' %}" class="d-grid gap-2 col-6 mx-auto">
+            <button type="button" class="btn btn-primary btn-lg">Cliente Antigo</button>
+        </a>
+    </div>
+</div>
+{% endblock %}
