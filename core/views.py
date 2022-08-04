@@ -1,9 +1,17 @@
+import datetime
+
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib import messages
-from django.views.generic import CreateView, UpdateView, ListView, TemplateView, DeleteView
+from django.views.generic import CreateView, UpdateView, ListView, TemplateView, DeleteView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView
+from django import forms
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
 
 from .forms import CertificadoForm, TransferirCertificadoForm
 from .models import *
@@ -12,7 +20,7 @@ from .models import *
 class TestMixinIsAdmin(UserPassesTestMixin):
     def test_func(self):
         is_admin_or_is_staff = self.request.user.is_superuser or \
-            self.request.user.is_staff
+                               self.request.user.is_staff
         return bool(is_admin_or_is_staff)
 
     def handle_no_permission(self):
@@ -23,7 +31,6 @@ class TestMixinIsAdmin(UserPassesTestMixin):
 
 
 class Login(LoginView):
-
     model = User
     template_name = 'login.html'
     success_url = 'menu_principal'
@@ -92,6 +99,32 @@ class ExibirTodosClientesView(LoginRequiredMixin, TestMixinIsAdmin, ListView):
 
     def get_queryset(self):
         return Cliente.objects.order_by('nome').all()
+
+
+def relatorio_vencimentos(request, primeiro, ultimo):
+    cert = Certificado.objects.order_by('validade').filter(validade__gte=primeiro, validade__lte=ultimo)
+    cert_f = [(c.cliente.nome,
+               c.cliente.responsavel,
+               c.produto,
+               c.validade.strftime("%d/%m/%Y"),
+               c.cliente.telefone1,
+               c.observacao) for c in cert]
+
+    primeiro_f = f'{primeiro.split("-")[2]}/{primeiro.split("-")[1]}/{primeiro.split("-")[0]}'
+    ultimo_f = f'{ultimo.split("-")[2]}/{ultimo.split("-")[1]}/{ultimo.split("-")[0]}'
+    with open('relatorio.txt', 'w') as relatorio:
+        relatorio.write(f'Vencimentos de {primeiro_f} á {ultimo_f}\n')
+        relatorio.write('_' * 65 + '\n')
+        for n in cert_f:
+            relatorio.write(
+                f'{n[0]} / {n[1]}\n'
+                f'{n[3]}          {n[2]}\n'
+                f'{n[4]}          {n[5]}\n'
+                f'{"-"*65}\n'
+            )
+    return FileResponse(open('relatorio.txt', 'rb'),
+                        as_attachment=True,
+                        filename=f'vencimentos-{primeiro_f}-{ultimo_f}.txt')
 
 
 class VencimentoPorPeriodoView(LoginRequiredMixin, TestMixinIsAdmin, ListView):
@@ -180,3 +213,28 @@ class DetalheCertificadoView(LoginRequiredMixin, TestMixinIsAdmin, UpdateView):
 
     def form_valid(self, form):
         return super().form_valid(form)
+
+
+class TransferirCertificadosView(LoginRequiredMixin, TestMixinIsAdmin, FormView):
+    login_url = 'core:login'
+    template_name = 'transferir_certificados.html'
+    form_class = TransferirCertificadoForm
+
+    def __init__(self):
+        super().__init__()
+        self.origem = None
+
+    def form_valid(self, form):
+        origem = form.cleaned_data['origem']
+        self.origem = origem
+        destino = form.cleaned_data['destino']
+        Certificado.objects.filter(cliente=origem).update(cliente=destino)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('pos_transferencia', kwargs={'pk': self.origem.pk})
+
+
+class Pos(LoginRequiredMixin, TestMixinIsAdmin, TemplateView):
+    template_name = 'pos_transferencia.html'
+    login_url = 'core:login'

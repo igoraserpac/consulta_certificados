@@ -20,3 +20,8 @@ class CertificadoForm(forms.ModelForm):
         widgets = {'emissao': forms.SelectDateWidget(years=range(this_year-20, this_year+10)),
                    'validade': forms.SelectDateWidget(years=range(this_year-20, this_year+10)),
                    'cliente': forms.Select()}
+
+
+class TransferirCertificadoForm(forms.Form):
+    origem = forms.ModelChoiceField(Cliente.objects.all())
+    destino = forms.ModelChoiceField(Cliente.objects.all())

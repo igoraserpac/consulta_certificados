@@ -26,6 +26,7 @@
 
     {% if primeiro and ultimo %}
     <div class='col 12' style="text-align:left;">
+      <a class="btn btn-lg btn-primary" href="{% url 'relatorio_vencimentos' primeiro ultimo %}">Gerar Relatório</a>
         <hr />
       <table class="table">
         <thead>
