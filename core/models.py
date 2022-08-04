@@ -99,7 +99,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Cliente(models.Model):
-    nome = models.CharField('Nome', max_length=50)
+    nome = models.CharField('Nome', max_length=100)
     responsavel = models.CharField('Responsável', max_length=50)
     email = models.CharField('E-mail', max_length=50)
     telefone1 = models.CharField('Telefone 1', max_length=14)
