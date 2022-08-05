@@ -125,7 +125,7 @@ class Certificado(models.Model):
     ticket_validator = MinLengthValidator(11, 'Confira o número do ticket')
 
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    ticket = models.CharField('Ticket', max_length=11, validators=[ticket_validator])
+    ticket = models.CharField('Ticket', max_length=11, validators=[ticket_validator], unique=True)
     produto = models.CharField('Produto', max_length=50)
     emissao = models.DateField('Emissão')
     validade = models.DateField('Validade')
