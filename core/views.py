@@ -145,7 +145,7 @@ class VencimentoPorPeriodoView(LoginRequiredMixin, TestMixinIsAdmin, ListView):
         primeiro = result.get('p', None)
         ultimo = result.get('u', None)
         if primeiro is not None and ultimo is not None:
-            return Certificado.objects.order_by('-validade').filter(validade__gte=primeiro, validade__lte=ultimo)
+            return Certificado.objects.order_by('validade').filter(validade__gte=primeiro, validade__lte=ultimo)
         return
 
 
@@ -169,7 +169,7 @@ class VendidosPorPeriodoView(LoginRequiredMixin, TestMixinIsAdmin, ListView):
         ultimo = result.get('u', None)
         if primeiro is not None and ultimo is not None:
             self.extra_context['soma'] = 0
-            certificados = Certificado.objects.order_by('-emissao').filter(emissao__gte=primeiro, emissao__lte=ultimo)
+            certificados = Certificado.objects.order_by('emissao').filter(emissao__gte=primeiro, emissao__lte=ultimo)
             for c in certificados:
                 if c.valor:
                     self.extra_context['soma'] += float(c.valor)
